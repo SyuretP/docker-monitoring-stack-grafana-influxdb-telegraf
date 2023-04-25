@@ -1,0 +1,52 @@
+version: '3'
+
+volumes:
+  influxdb-data:
+    driver: local
+  grafana-data:
+    driver: local
+  grafana-data2:
+    driver: local
+  telegraf-data:
+    driver: local
+   
+services:
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    
+    ports:
+      - "8086:8086"
+      
+  environment:
+      - INFLUXD_HTTP_IDLE_TIMEOUT=0
+    
+   volumes:
+     - influxdb-data:/var/lib/influxdb2 \
+    
+   restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafanatwo
+    ports:
+      - "3001:3000"
+    volumes:
+    - grafana-data:/var/lib/grafana
+    - grafana-data2:/etc/grafana
+    restart: unless-stopped
+    
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    volumes:
+     - telegraf-data:/etc/telegraf
+  
+  restart: unless-stopped
+    
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    ports:
+    - '8125:8125'
