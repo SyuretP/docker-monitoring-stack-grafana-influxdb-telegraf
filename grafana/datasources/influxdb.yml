@@ -1,1 +1,15 @@
 
+Version: 1
+
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    secureJsonData:
+      token: myadmintoken
+    jsonData:
+      version: Flux
+      organization: TestEnv
+      defaultBucket: TestBucket
+      #tlsSkipVerify: true
